@@ -1,8 +1,8 @@
-# Operation SKYE-X — Autonomous Aerial Robotics Hackathon
+# Aerial Robotics Hackathon
 
-> **Aerial Robotics Club | Y25 Recruitment Hackathon**
+> **Team Aerial Robotics | Y25 Recruitment Hackathon**
 
-Welcome to **Operation SKYE-X**, a multi-level autonomous drone simulation challenge. Your mission is to program an intelligent flight controller for a quadcopter drone navigating a contested 2D aerial environment.
+Hey Y25s! Hope you are enjoying your time on the campus. These are the problem statements of the **Aerial Robotics Hackathon 2026**. They are divided into three levels. The submission guidelines for each level are mentioned clearly — please follow them correctly. Any doubts can be raised on GitHub in the **Discussions** tab of this repository. You can find the problem statements and required starter kits in this repo.
 
 ---
 
@@ -24,24 +24,6 @@ pip install pygame
 pip install opencv-contrib-python numpy    # Level 3
 ```
 
-### Running Simulation
-```bash
-# Level 1 — Search & Pursuit
-cd Hackathon/Level1
-python skye_controller.py
-
-# Level 2 — Precision Landing
-cd Hackathon/Level2
-python simulator.py          # Demo mode (built-in controller)
-python simulator.py --c      # Your controller (reads commands.txt)
-
-# Level 3 — Project MIRAGE
-cd Hackathon/Level3
-python generator.py far_target_decoy.png aruco_markers/aruco_id_X.png X hybrid_marker.png
-python simulator.py hybrid_marker.png 30   # View at 30m — should show H symbol
-python simulator.py hybrid_marker.png 2    # View at 2m — should show ArUco
-```
-
 ---
 
 ## Submission Guidelines
@@ -51,7 +33,7 @@ python simulator.py hybrid_marker.png 2    # View at 2m — should show ArUco
 - Submit your final `skye_controller.py` with a short write-up explaining your approach
 
 ### Level 2
-- Write a controller (Python or C++) that reads `camera_pixels.txt` and writes velocity commands to `commands.txt`
+- Write a controller (Python or C) that reads `camera_pixels.txt` and writes velocity commands to `commands.txt`
 - Submit your controller source file with a short write-up explaining your approach
 
 ### Level 3
