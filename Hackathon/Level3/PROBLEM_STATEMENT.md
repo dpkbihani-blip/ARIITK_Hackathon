@@ -160,11 +160,3 @@ Mirage-Starter-Kit/
 ├── simulator.py               ← altitude tester
 └── README.md
 ```
-
-### Requirements
-```bash
-pip install opencv-contrib-python numpy
-```
-
----
-

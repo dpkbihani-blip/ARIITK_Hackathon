@@ -1,3 +1,5 @@
+![Level 2 Demo](Level2.gif)
+
 # Level 2 — Operation Touchdown: Precision Landing
 
 > **Team Aerial Robotics IITK | Y25 Recruitment Hackathon**
