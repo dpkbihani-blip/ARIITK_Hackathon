@@ -19,3 +19,8 @@ Thumbs.db
 # Simulator outputs
 camera_pixels.txt
 commands.txt
+
+# Bonus level simulator binaries (hosted on Google Drive)
+Hackathon/Bonus/*.exe
+Hackathon/Bonus/*.x86_64
+Hackathon/Bonus/*.zip

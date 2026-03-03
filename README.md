@@ -2,7 +2,7 @@
 
 > **Team Aerial Robotics IITK | Y25 Recruitment Hackathon 2026**
 
-Hey Y25s! Hope you are enjoying your time on the campus. These are the problem statements of the **Aerial Robotics Hackathon 2026**. They are divided into three levels. The submission guidelines for each level are mentioned clearly — please follow them correctly. Any doubts can be raised on GitHub in the **Discussions** tab of this repository. You can find the problem statements and required starter kits in this repo.
+Hey Y25s! Hope you are enjoying your time on the campus. These are the problem statements of the **Aerial Robotics Hackathon 2026**. They are divided into three levels and a **Bonus level**. The submission guidelines for each level are mentioned clearly — please follow them correctly. Any doubts can be raised on GitHub in the **Discussions** tab of this repository. You can find the problem statements and required starter kits in this repo.
 
 ---
 
@@ -13,6 +13,7 @@ Hey Y25s! Hope you are enjoying your time on the campus. These are the problem s
 | [Level 1](./Hackathon/Level1/PROBLEM_STATEMENT.md) | **Operation SKYE-X: Search & Pursuit** | Explore the map, find an evasive target, and track it under sensor limitations |
 | [Level 2](./Hackathon/Level2/PROBLEM_STATEMENT.md) | **Operation Touchdown: Precision Landing** | A harder variant with new constraints — unlocked after Level 1 |
 | [Level 3](./Hackathon/Level3/PROBLEM_STATEMENT.md) | **Project MIRAGE: Hybrid Marker Steganography** | Create a single image that shows a decoy at high altitude and a secret ArUco marker at low altitude |
+| [Bonus](./Hackathon/Bonus/PROBLEM_STATEMENT.md) | **Operation FREEFALL: Autonomous Precision Landing** | Use a 3D physics simulator, ArUco detection, and PID control to land a drone on static and moving targets |
 
 ---
 
@@ -21,7 +22,8 @@ Hey Y25s! Hope you are enjoying your time on the campus. These are the problem s
 ### Requirements
 ```bash
 pip install pygame
-pip install opencv-contrib-python numpy    # Level 3
+pip install opencv-contrib-python numpy                # Level 3
+pip install opencv-contrib-python numpy requests simple-pid   # Bonus
 ```
 
 ---
@@ -40,6 +42,11 @@ pip install opencv-contrib-python numpy    # Level 3
 - Submit a GitHub repository with: `generator.py`, `hybrid_marker.png`, `viewer.py`, `visual_check.py`, `drone_view_2.0m.png`, `drone_view_30.0m.png`, and `report.pdf`
 - `viewer.py` and `visual_check.py` must be **built from scratch** — they are not provided
 - `report.pdf` (max 2 pages) must include σ values, mathematical reasoning, and GSD calculation
+
+### Bonus Level
+- Submit `auto_land.py`, `landing_video.mp4`, and `report.pdf`
+- `auto_land.py` must connect to the simulator (ports 8080/8081) and use ArUco detection — **no hardcoded coordinates**
+- `report.pdf` (max 2 pages) must include PID tuning approach, control loop diagram, and ArUco pipeline explanation
 
 ---
 
@@ -69,3 +76,12 @@ pip install opencv-contrib-python numpy    # Level 3
 | **ArUco ID_X hidden at ≥ 30m** | 30% | Image shrunk to 30m pixel size, ArUco detection run |
 | **Visual quality — no ghosting** | 15% | Judging script at 30m; visual inspection for ArUco bleed-through |
 | **Math justification in report** | 15% | σ values backed by GSD/Nyquist calculations, not trial and error |
+
+### Bonus — Operation FREEFALL
+
+| Metric | Points |
+|--------|--------|
+| **Phase 1 Completion** (static landing) | +300 |
+| **Phase 2 Completion** (moving platform) | +500 |
+| **Landing Smoothness** | Up to +200 bonus (lower touchdown velocity → higher score) |
+| **Time to Land** | Fastest landing breaks ties |
