@@ -87,7 +87,7 @@ pip install -r requirements.txt
 
 | Metric | Points |
 |--------|--------|
-| **Phase 1 Completion** (static landing) | +300 |
-| **Phase 2 Completion** (moving platform) | +500 |
-| **Landing Smoothness** | Up to +200 bonus (lower touchdown velocity → higher score) |
+| **Phase 1 Completion** (static landing) | 30% |
+| **Phase 2 Completion** (moving platform) | 50% |
+| **Landing Smoothness** | Up to 20% bonus (lower touchdown velocity → higher score) |
 | **Time to Land** | Fastest landing breaks ties |
