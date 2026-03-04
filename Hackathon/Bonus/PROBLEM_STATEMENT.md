@@ -1,3 +1,4 @@
+![Bonus Level Demo](BonusLevel.gif)
 # Bonus Level — Operation FREEFALL: Autonomous Precision Landing
 
 > **Team Aerial Robotics IITK| Y25 Recruitment Hackathon**
