@@ -45,7 +45,7 @@ Each frame `step_env()` returns a flat list of **10 000 grayscale integers** (10
 |--------|-----------|-------|
 | Grass / background | ~45–90 | Dark green |
 | Platform surface | ~200–230 | Bright rectangle — the landing pad |
-| Inner ArUco square | ~0–20 | Near-black square at platform centre |
+| Inner square | ~0–20 | Near-black square at platform centre |
 
 ---
 
