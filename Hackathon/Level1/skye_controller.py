@@ -2,103 +2,160 @@ import math
 import pygame
 from skye_env import SkyeEnv
 
-def _lidar_repulsion(lidar_distances, num_rays=36, danger_dist=80):
+TARGET_TRACK_DIST = 60
+MAX_SPEED = 3.5
+DANGER_DIST = 80
+last_seen_target = None
+
+def _lidar_repulsion(lidar_distances, num_rays=36, danger_dist=DANGER_DIST):
     """Returns (rx, ry) repulsion vector from LiDAR readings."""
     rx, ry = 0.0, 0.0
+
     if not lidar_distances:
         return rx, ry
+
     for i, dist in enumerate(lidar_distances):
+
         if dist < danger_dist and dist > 1e-6:
+
             angle = (i / num_rays) * 2 * math.pi
+
             strength = (danger_dist - dist) / danger_dist
+
             rx -= strength * math.cos(angle)
             ry -= strength * math.sin(angle)
+
     return rx, ry
 
-def compute_velocity(sensors):
+def circular_exploration(lidar):
     """
-    TASK: Write your dual-state flight controller!
+    Move tangentially around closest obstacle.
+    This makes the drone explore obstacle clusters,
+    where SKYE-X usually hides.
+    """
 
-    You receive 'sensors', a dictionary containing:
-    - player_x, player_y: Your current coordinates (float).
-    - lidar_distances: Array of 36 floats (distances in each direction).
-    - target_visible: Boolean. True if the target is within your sensor radius.
-    - target_pos: (x, y) tuple of the target. (Is 'None' if target_visible is False).
-    """
+    if not lidar:
+        return 0.5, 0.3
+
+    closest = min(lidar)
+    idx = lidar.index(closest)
+
+    obstacle_angle = math.radians(idx * 10)
+
+    # tangent direction
+    tangent_angle = obstacle_angle + math.pi / 2
+
+    vx = math.cos(tangent_angle)
+    vy = math.sin(tangent_angle)
+
+    rx, ry = _lidar_repulsion(lidar)
+
+    vx += 1.5 * rx
+    vy += 1.5 * ry
+
+    return vx, vy
+
+
+def pursue_target(px, py, tx, ty):
+
+    dx = tx - px
+    dy = ty - py
+
+    dist = math.hypot(dx, dy)
+
+    if dist < 1e-6:
+        return 0, 0
+
+    dx /= dist
+    dy /= dist
+
+    # Maintain distance near 60 px
+    error = dist - TARGET_TRACK_DIST
+
+    vx = dx * error
+    vy = dy * error
+
+    return vx, vy
+
+
+def compute_velocity(sensors):
+
+    global last_seen_target
+
     px = sensors["player_x"]
     py = sensors["player_y"]
+
     lidar = sensors.get("lidar_distances", [])
 
     rx, ry = _lidar_repulsion(lidar)
 
     vx, vy = 0.0, 0.0
+    
+    if sensors["target_visible"]:
 
-    if not sensors["target_visible"]:
-        # ==========================================================
-        # STATE 1: EXPLORATION (INTO THE UNKNOWN)
-        # ==========================================================
-        # The target is hidden in the Fog of War.
-        # You must systematically explore the map without hitting obstacles.
-        # If you just fly randomly, you will waste time. 
-        
-        base_vx, base_vy = 0.8, 0.4
-    else:
-        # ==========================================================
-        # STATE 2: THE PURSUIT
-        # ==========================================================
-        # You found the target! 
-        # However, the target's max speed is 2.5, and yours is 3.5
-        # You must anticipate its trajectory, cut corners around obstacles,
-        # and stay within the 70px tracking radius to maximize your score.
-        
         tx, ty = sensors["target_pos"]
-        dx, dy = tx - px, ty - py
-        dist = math.hypot(dx, dy)
-        if dist > 1e-6:
-            base_vx = 1.0 * (dx / dist)
-            base_vy = 1.0 * (dy / dist)
-        else:
-            base_vx, base_vy = 0.0, 0.0
+
+        last_seen_target = (tx, ty)
+
+        base_vx, base_vy = pursue_target(px, py, tx, ty)
+
+    elif last_seen_target is not None:
+
+        tx, ty = last_seen_target
+
+        base_vx, base_vy = pursue_target(px, py, tx, ty)
+
+    else:
+
+        base_vx, base_vy = circular_exploration(lidar)
 
     vx = base_vx + rx
     vy = base_vy + ry
+
     speed = math.hypot(vx, vy)
-    if speed > 1.0 and speed > 1e-6:
-        vx = (vx / speed) * 1.0
-        vy = (vy / speed) * 1.0
+
+    if speed > MAX_SPEED and speed > 1e-6:
+
+        vx = (vx / speed) * MAX_SPEED
+        vy = (vy / speed) * MAX_SPEED
 
     return vx, vy
 
+
+# ==============================
+# SIMULATION LOOP
+# ==============================
+
 def main():
+
     print("--- SKYE-X Booting: Search & Pursuit ---")
-    
-    # Initialize the simulation environment
+
     env = SkyeEnv()
-    
+
     running = True
+
     while running:
-        # 1. Handle window closing
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-                
-        # 2. Read the drone's sensors (Subject to Fog of War)
+
         sensors = env.get_sensor_data()
-        
-        # 3. Compute physics-based velocity commands (YOUR CODE)
+
         vx, vy = compute_velocity(sensors)
 
         env.step(vx, vy)
-        
-        # 5. Check for Mission Status
+
         if env.crashed:
             print(f"MISSION FAILED: Drone Crashed! Final Score: {env.score}")
             break
+
         elif env.mission_over:
             print(f"SIMULATION COMPLETE. Final Escort Score: {env.score} timesteps")
             break
 
     pygame.quit()
+
 
 if __name__ == "__main__":
     main()
